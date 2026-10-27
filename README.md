@@ -25,6 +25,12 @@ Halaman ini adalah alat internal. Ia **tidak diindeks mesin pencari** (meta `noi
 
 Agent yang sedang punya tugas (status bekerja, selesai, atau gagal) **tetap di mejanya** di luar jam kerja juga, karena posisinya mengikuti status nyata, bukan jadwal.
 
+Status tidak menempel selamanya:
+- **Selesai** hanya tampil 15 menit (centang di layar, confetti, agent di meja). Setelah itu agent kembali menunggu tugas dan mengikuti jadwal di atas. Riwayatnya tetap ada di Aktivitas dan di kartu agent ("Terakhir selesai 3 jam lalu: ...").
+- **Bekerja** tanpa kabar lebih dari 3 jam dianggap tidak ada kabar, bukan bekerja terus.
+- **Gagal** tetap tampil sampai diperbaiki, karena perlu dicek manusia.
+- Penanda "Worker aktif" di atas denah berasal dari `worker.lastSeen` di `data/state.json` (heartbeat tiap 2 jam; merah bila lebih dari 3 jam tanpa kabar).
+
 ## Sepuluh agent
 
 | ID | Peran |

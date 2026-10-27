@@ -308,7 +308,21 @@
     if (text != null) n.textContent = text;
     return n;
   }
-  function statusOf(d) { return d && STATE_LABEL[d.status] ? d.status : "idle"; }
+  /* Status "selesai" hanya terlihat 15 menit; setelah itu agent kembali menunggu tugas (riwayat ada di Aktivitas).
+     Status "bekerja" tanpa kabar lebih dari 3 jam dianggap tidak ada kabar, bukan bekerja terus. */
+  var DONE_FRESH = 15 * 60e3, WORK_STALE = 3 * 3600e3;
+  function rawStatus(d) { return d && STATE_LABEL[d.status] ? d.status : "idle"; }
+  function statusOf(d) {
+    var s = rawStatus(d), t = d && Date.parse(d.updated);
+    if (t) { var age = Date.now() - t; if ((s === "done" && age > DONE_FRESH) || (s === "working" && age > WORK_STALE)) return "idle"; }
+    return s;
+  }
+  function noteOf(d) {
+    var raw = rawStatus(d), eff = statusOf(d), t = typeof (d && d.task) === "string" ? d.task : "";
+    if (raw === "done" && eff === "idle") return "Terakhir selesai " + ago(d.updated) + (t ? ": " + t : "");
+    if (raw === "working" && eff === "idle") return "Tidak ada kabar sejak " + ago(d.updated) + (t ? " (" + t + ")" : "");
+    return "";
+  }
 
   function renderFloor() {
     var root = $("#floor"); root.replaceChildren();
@@ -332,7 +346,9 @@
     });
     var box = $("#summary"); box.replaceChildren();
     [["working", "bekerja"], ["done", "selesai"], ["error", "gagal"], ["idle", "menunggu"]].forEach(function (k) {
-      var s = el("span"); s.append(el("span", "dot " + k[0]), document.createTextNode(c[k[0]] + " " + k[1])); box.append(s);
+      var s = el("span"); s.append(el("span", "dot " + k[0]), document.createTextNode(c[k[0]] + " " + k[1]));
+      if (k[0] === "done") s.title = "Selesai dalam 15 menit terakhir. Setelah itu agent kembali menunggu tugas; riwayatnya ada di Aktivitas.";
+      box.append(s);
     });
     stampLatest = latest; updateStamp();
     $("#site-count").textContent = state.sites.length + " / 30 website";
@@ -1192,7 +1208,7 @@
       var ag = agents[sel], d = state.agents[ag.id] || {}, st = ag.status;
       $("#p-role").textContent = ag.label; $("#p-state").textContent = STATE_LABEL[st];
       $("#p-dot").className = "dot " + st;
-      $("#p-task").textContent = typeof d.task === "string" && d.task ? d.task : DEFAULT_TASK[st];
+      $("#p-task").textContent = noteOf(d) || (typeof d.task === "string" && d.task ? d.task : DEFAULT_TASK[st]);
       $("#p-site").textContent = (typeof d.site === "string" && d.site ? d.site + " · " : "") + "Di " + where(ag.x, ag.z);
     }
 
