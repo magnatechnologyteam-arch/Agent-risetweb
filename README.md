@@ -6,7 +6,7 @@ Halaman ini adalah alat internal. Ia **tidak diindeks mesin pencari** (meta `noi
 
 ## Isi halaman
 
-- **Lantai kantor 3D** (Three.js r128, tanpa proses build): putar 360°, zoom, geser, klik karakter untuk melihat tugasnya. Tersedia tampilan sederhana 2D sebagai cadangan, dan dipilih otomatis bila WebGL tidak ada.
+- **Lantai kantor 3D** (Three.js r128, tanpa proses build): putar 360°, zoom, geser, klik karakter untuk melihat tugasnya. Bila WebGL tidak tersedia, halaman otomatis memakai denah 2D sederhana.
 - **Waktu nyata WIB**: jam, tanggal, langit, dan lampu mengikuti waktu Asia/Jakarta. Agent yang menganggur mengikuti jadwal harian (lihat di bawah).
 - **Status agent yang jujur**: agent yang bekerja, selesai, atau gagal tetap duduk di kursinya di Ruang Intern. Layar monitornya berubah (kode bergulir, centang, atau tanda seru). Hanya agent yang menganggur yang berkeliling (ngopi, ngobrol berpasangan, rapat, main dart, peregangan, dan sebagainya).
 - **Papan 30 website** berbentuk dropdown per tahap (Riset, Rancang, Bangun, QA, Pratinjau, Disetujui, Dipantau). Tiap tahap menampilkan jumlah website dan bisa dibuka atau ditutup.

@@ -53,7 +53,7 @@
   .done .dot, .dot.done { background: var(--st-done); }
   .error .dot, .dot.error { background: var(--st-err); }
 
-  .banner { border: 2px solid var(--st-err); background: var(--panel); padding: 10px 14px; }
+  .banner { border-left: 4px solid var(--st-err); background: var(--panel); padding: 8px 12px; font-size: 13px; color: var(--muted); }
   .section-head { display: flex; justify-content: space-between; align-items: center; gap: 8px 12px; margin-bottom: 8px; flex-wrap: wrap; min-height: 32px; }
   .section-head small { color: var(--muted); }
   .head-r { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
@@ -167,7 +167,7 @@
     <section class="stagecol" aria-labelledby="h-floor">
       <div class="section-head">
         <h2 id="h-floor">Lantai kantor</h2>
-        <div class="head-r"><small id="stamp"></small><button class="btn ghost" id="mode-btn" type="button" hidden>Tampilan sederhana</button></div>
+        <div class="head-r"><small id="stamp"></small></div>
       </div>
       <div class="stage" id="stage" hidden>
         <canvas id="gl" tabindex="0" aria-label="Denah kantor 3D: ruang kerja dengan satu meja panjang, lorong, pantry, dapur, ruang tamu, teras, garasi, dan halaman" role="img"></canvas>
@@ -187,7 +187,6 @@
           <div class="p-site" id="p-site"></div>
         </div>
       </div>
-      <p class="hint" id="hint" hidden>Seret untuk memutar 360°, gulir atau tombol +/− untuk zoom, Shift+seret untuk menggeser, klik karakter untuk melihat tugasnya. Pintu Ruang Intern dan Kamar Staff terbuka saat ada yang lewat, Kamar Owner tertutup. Jadwal agent yang menunggu tugas: 08.00 siap-siap, 09.00 sampai 12.00 dan 13.00 sampai 18.00 jam kerja (standby di meja), 12.00 sampai 13.00 istirahat, 18.00 sampai 24.00 bebas (main game, ngobrol, main dart, santai), dan 00.00 sampai 08.00 tidur di Kamar Staff. Agent yang sedang punya tugas tetap di mejanya. Ada dua kucing, anjing, burung, dan ikan koi. Denah mengikuti MagnaSuperApp dan foto kantor: lorong di tengah, di kiri Kamar Staff dan Ruang Tim Creative, di kanan Ruang Intern dan Kamar Owner, dapur dengan bar kuning di utara, serta Ruang Tamu, teras, dan gerbang di selatan. Jam, langit, dan lampu mengikuti waktu WIB sungguhan. Agent yang bekerja, selesai, atau gagal tetap di kursinya di Ruang Intern dan layar monitornya berubah warna. Yang berjalan ke pantry, lorong, Meja Besar, atau teras adalah agent yang sedang menunggu tugas, dan larut malam mereka pulang lewat gerbang.</p>
       <div class="floor" id="floor"></div>
     </section>
     <aside class="side" aria-labelledby="h-log">
@@ -198,11 +197,11 @@
 
   <section aria-labelledby="h-board">
     <div class="section-head"><h2 id="h-board">Papan website</h2><small id="site-count"></small></div>
-    <div class="empty" id="empty-sites" hidden>Belum ada website di papan. Agent Riset Kata Kunci &amp; Niche akan mengisi 30 niche pertama, lalu tiap website bergerak dari kolom Riset sampai Dipantau.</div>
+    <div class="empty" id="empty-sites" hidden>Belum ada website di papan. Agent Riset Kata Kunci &amp; Niche akan mengisi 30 niche pertama, lalu tiap website bergerak dari tahap Riset sampai Dipantau.</div>
     <div class="board" id="board"></div>
   </section>
 
-  <p class="foot">Setiap website tayang sebagai pratinjau dengan noindex. Google baru boleh mengindeksnya setelah Anda menekan Setujui di kolom Pratinjau.</p>
+  <p class="foot">Setiap website tayang sebagai pratinjau dengan noindex. Google baru boleh mengindeksnya setelah Anda menekan Setujui di tahap Pratinjau.</p>
 </div>
 
 <script src="vendor/three.min.js"></script>
@@ -1246,17 +1245,16 @@
   var can3D = webglOK();
   function setMode(m) {
     if (m === "3d") {
-      $("#stage").hidden = false; $("#hint").hidden = false; $("#floor").hidden = true;
+      $("#stage").hidden = false; $("#floor").hidden = true;
       if (!scene3d) { try { scene3d = build3D(); } catch (e) { scene3d = null; } }
-      if (scene3d) { scene3d.sync(); scene3d.start(); mode = "3d"; $("#mode-btn").textContent = "Tampilan sederhana"; }
-      else { setMode("simple"); $("#mode-btn").hidden = true; return; }
+      if (scene3d) { scene3d.sync(); scene3d.start(); mode = "3d"; }
+      else { setMode("simple"); return; }
     } else {
       if (scene3d) scene3d.stop();
-      $("#stage").hidden = true; $("#hint").hidden = true; $("#floor").hidden = false;
-      mode = "simple"; $("#mode-btn").textContent = "Tampilan 3D";
+      $("#stage").hidden = true; $("#floor").hidden = false;
+      mode = "simple";
     }
-    try { localStorage.setItem("kv-mode", mode); } catch (e) {}
-  }
+      }
 
   function onErr() { $("#banner").hidden = false; }
 
@@ -1265,10 +1263,7 @@
   setInterval(updateStamp, 1000);
 
   if (can3D) {
-    $("#mode-btn").hidden = false;
-    $("#mode-btn").addEventListener("click", function () { setMode(mode === "3d" ? "simple" : "3d"); });
-    var saved = null; try { saved = localStorage.getItem("kv-mode"); } catch (e) {}
-    setMode(saved === "simple" ? "simple" : "3d");
+    setMode("3d");
   }
   window.__kv = function () { return scene3d; };
 
