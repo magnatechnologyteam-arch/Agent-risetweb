@@ -334,5 +334,9 @@
       "text": "Kantor dibuka. Sepuluh agent siap menerima tugas; belum ada website di papan.",
       "ts": "2026-10-27T04:00:00.000Z"
     }
-  ]
+  ],
+  "worker": {
+    "lastSeen": "2026-10-27T12:46:58.165Z",
+    "host": "it12"
+  }
 }

@@ -4,7 +4,8 @@
    node scripts/kv.mjs site s01 stage rancang
    node scripts/kv.mjs site s01 url https://contoh.vercel.app
    node scripts/kv.mjs site s01 score 78
-   node scripts/kv.mjs log a03 "Kerangka Tenda Event selesai" */
+   node scripts/kv.mjs log a03 "Kerangka Tenda Event selesai"
+   node scripts/kv.mjs heartbeat it12   (tanda worker masih hidup) */
 import { readFileSync, writeFileSync } from "node:fs";
 const FILE = new URL("../data/state.json", import.meta.url);
 const STATUS = ["idle", "working", "done", "error"], STAGES = ["riset", "rancang", "bangun", "qa", "pratinjau", "disetujui", "dipantau"];
@@ -26,6 +27,8 @@ if (cmd === "status") {
 } else if (cmd === "log") {
   const [agent, ...t] = a; if (!t.length) die("teks log kosong");
   st.log.unshift({ ts: now, agent, text: t.join(" ") }); st.log = st.log.slice(0, 200);
-} else die("perintah: status | site | log");
+} else if (cmd === "heartbeat") {
+  st.worker = { lastSeen: now, host: a[0] || "" };
+} else die("perintah: status | site | log | heartbeat");
 writeFileSync(FILE, JSON.stringify(st, null, 2) + "\n");
 console.log("ok");

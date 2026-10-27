@@ -56,6 +56,7 @@
   .banner { border-left: 4px solid var(--st-err); background: var(--panel); padding: 8px 12px; font-size: 13px; color: var(--muted); }
   .section-head { display: flex; justify-content: space-between; align-items: center; gap: 8px 12px; margin-bottom: 8px; flex-wrap: wrap; min-height: 32px; }
   .section-head small { color: var(--muted); }
+  .section-head small.stale { color: var(--st-err); font-weight: 600; }
   .head-r { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
 
   .btn { font: inherit; font-weight: 600; cursor: pointer; padding: 5px 10px; border: 2px solid var(--ink); background: var(--ink); color: var(--bg); line-height: 1.25; }
@@ -231,7 +232,7 @@
   var SKIN = ["#f0c9a0", "#d9a273", "#a8704a", "#f0c9a0", "#8d5a3b", "#e3b58a", "#f0c9a0", "#c48a5c", "#d9a273", "#e3b58a"];
   var SCREEN = { working: "#123f31", done: "#12315c", error: "#4a1c1c" };
 
-  var state = { agents: {}, sites: [], log: [], canEdit: false, db: null };
+  var state = { agents: {}, sites: [], log: [], worker: null, canEdit: false, db: null };
   var scene3d = null, mode = "simple";
   var $ = function (s) { return document.querySelector(s); };
 
@@ -250,7 +251,13 @@
   function wibDate() { var w = wibParts(); return HARI[w.wd] + ", " + w.day + " " + BLN[w.mon] + " " + w.yr; }
   var stampLatest = 0;
   function updateStamp() {
-    $("#stamp").textContent = (stampLatest ? "Pembaruan terakhir " + ago(new Date(stampLatest).toISOString()) : "Belum ada pembaruan dari agent");
+    var txt = (stampLatest ? "Pembaruan terakhir " + ago(new Date(stampLatest).toISOString()) : "Belum ada pembaruan dari agent"), stale = false;
+    var w = state.worker && Date.parse(state.worker.lastSeen);
+    if (w) {
+      stale = Date.now() - w > 3 * 3600e3;
+      txt += stale ? " · Worker tidak melapor sejak " + ago(state.worker.lastSeen) : " · Worker aktif (lapor " + ago(state.worker.lastSeen) + ")";
+    }
+    var st = $("#stamp"); st.textContent = txt; st.className = stale ? "stale" : "";
     var c = $("#clock-chip"); if (c) c.textContent = wibClock(true) + " · " + wibDate() + " · " + PHASE_LABEL[phaseOf(wibHour())];
   }
 
@@ -1282,6 +1289,9 @@
         .sort(function (a, b) { return String(a.name || a.id).localeCompare(String(b.name || b.id)); });
       renderBoard(); renderSummary();
     }, onErr);
+    db.collection("meta").onSnapshot(function (snap) {
+      var w = null; snap.docs.forEach(function (d) { if (d.id === "worker") w = d.data(); }); state.worker = w; updateStamp();
+    }, function () {});
     db.collection("log").orderBy("ts", "desc").limit(30).onSnapshot(function (snap) {
       state.log = snap.docs.map(function (d) { return d.data(); }); renderLog();
     }, onErr);

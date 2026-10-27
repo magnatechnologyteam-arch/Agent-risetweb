@@ -8,6 +8,7 @@
   function rows(name) {
     if (!cache) return [];
     if (name === "log") return (cache.log || []).map(function (d, i) { return { id: "l" + i, data: d }; });
+    if (name === "meta") return cache.worker ? [{ id: "worker", data: cache.worker }] : [];
     var o = cache[name] || {}; return Object.keys(o).map(function (k) { return { id: k, data: o[k] }; });
   }
   function emit() { subs.forEach(function (s) { s(); }); }
