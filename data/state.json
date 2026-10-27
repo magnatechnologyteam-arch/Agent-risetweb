@@ -1,0 +1,333 @@
+{
+  "agents": {
+    "a01": {
+      "site": "",
+      "status": "done",
+      "task": "Riset kompetitor selesai: 4 situs dibaca penuh, 7 lainnya tercatat",
+      "updated": "2026-10-27T06:32:00.000Z"
+    },
+    "a02": {
+      "site": "",
+      "status": "done",
+      "task": "30 kandidat niche selesai; data volume kata kunci belum ada",
+      "updated": "2026-10-27T06:32:00.000Z"
+    },
+    "a03": {
+      "site": "",
+      "status": "idle",
+      "task": "Menunggu hasil riset",
+      "updated": "2026-10-27T04:00:00.000Z"
+    },
+    "a04": {
+      "site": "",
+      "status": "idle",
+      "task": "Menunggu rancangan",
+      "updated": "2026-10-27T04:00:00.000Z"
+    },
+    "a05": {
+      "site": "",
+      "status": "idle",
+      "task": "Menunggu rancangan",
+      "updated": "2026-10-27T04:00:00.000Z"
+    },
+    "a06": {
+      "site": "",
+      "status": "idle",
+      "task": "Menunggu website pertama",
+      "updated": "2026-10-27T04:00:00.000Z"
+    },
+    "a07": {
+      "site": "",
+      "status": "idle",
+      "task": "Menunggu website pertama",
+      "updated": "2026-10-27T04:00:00.000Z"
+    },
+    "a08": {
+      "site": "",
+      "status": "idle",
+      "task": "Gerbang sebelum pratinjau",
+      "updated": "2026-10-27T04:00:00.000Z"
+    },
+    "a09": {
+      "site": "",
+      "status": "idle",
+      "task": "Menunggu website tayang",
+      "updated": "2026-10-27T04:00:00.000Z"
+    },
+    "a10": {
+      "site": "",
+      "status": "idle",
+      "task": "Menunggu website untuk dinilai",
+      "updated": "2026-10-27T04:00:00.000Z"
+    }
+  },
+  "sites": {
+    "s01": {
+      "gap": "Pesaing jarang memuat ukuran, kapasitas orang, dan harga per ukuran",
+      "intent": "transaksional",
+      "kw": "sewa tenda roder, sewa tenda sarnafil, harga sewa tenda per hari",
+      "name": "Tenda Event",
+      "niche": "Sewa tenda roder, sarnafil, dan kerucut",
+      "stage": "riset"
+    },
+    "s02": {
+      "gap": "Spesifikasi beban dan ukuran panggung tidak dijelaskan di pesaing",
+      "intent": "transaksional",
+      "kw": "sewa panggung, sewa truss, rigging event",
+      "name": "Panggung & Rigging",
+      "niche": "Sewa panggung modular dan rigging truss",
+      "stage": "riset"
+    },
+    "s03": {
+      "gap": "Panduan memilih sound berdasarkan jumlah tamu hampir tidak ada",
+      "intent": "transaksional",
+      "kw": "sewa sound system, sound system pensi, sewa sound indoor",
+      "name": "Sound System",
+      "niche": "Sewa sound system sesuai kapasitas acara",
+      "stage": "riset"
+    },
+    "s04": {
+      "gap": "Daftar harga tersebar dan tidak jelas isi paketnya",
+      "intent": "transaksional",
+      "kw": "sewa lighting panggung, sewa moving head, lighting wedding",
+      "name": "Lighting Panggung",
+      "niche": "Sewa lighting panggung dan efek",
+      "stage": "riset"
+    },
+    "s05": {
+      "gap": "Pitch, ukuran, dan jarak pandang jarang dijelaskan",
+      "intent": "transaksional",
+      "kw": "sewa LED screen, sewa videotron, ukuran LED screen untuk acara",
+      "name": "LED Screen",
+      "niche": "Sewa LED screen dan videotron indoor/outdoor",
+      "stage": "riset"
+    },
+    "s06": {
+      "gap": "Katalog pesaing tanpa nama produk dan ukuran lengkap",
+      "intent": "transaksional",
+      "kw": "sewa kursi futura, sewa meja cocktail, sewa kursi event",
+      "name": "Kursi & Meja",
+      "niche": "Sewa kursi futura, tiffany, cocktail, dan meja",
+      "stage": "riset"
+    },
+    "s07": {
+      "gap": "Tidak ada panduan kapasitas per kebutuhan",
+      "intent": "transaksional",
+      "kw": "sewa genset event, kapasitas genset kVA, sewa genset silent",
+      "name": "Genset",
+      "niche": "Sewa genset dan perhitungan daya acara",
+      "stage": "riset"
+    },
+    "s08": {
+      "gap": "Informasi daya listrik dan area jangkauan minim",
+      "intent": "transaksional",
+      "kw": "sewa AC portable, sewa AC standing, sewa kipas besar",
+      "name": "AC & Kipas Portable",
+      "niche": "Sewa AC portable dan kipas untuk acara",
+      "stage": "riset"
+    },
+    "s09": {
+      "gap": "Jarang dibahas rasio toilet per jumlah tamu",
+      "intent": "transaksional",
+      "kw": "sewa toilet portable, toilet portable event, jumlah toilet per tamu",
+      "name": "Toilet Portable",
+      "niche": "Sewa toilet portable untuk acara",
+      "stage": "riset"
+    },
+    "s10": {
+      "gap": "Konten sangat tipis di pesaing",
+      "intent": "transaksional",
+      "kw": "sewa barikade, barikade crowd control, sewa pagar antrean",
+      "name": "Barikade",
+      "niche": "Sewa barikade dan pengaturan antrean",
+      "stage": "riset"
+    },
+    "s11": {
+      "gap": "Jenis dan ukuran jarang dijelaskan",
+      "intent": "transaksional",
+      "kw": "sewa karpet event, sewa red carpet, sewa flooring pameran",
+      "name": "Flooring & Karpet",
+      "niche": "Sewa karpet, flooring, dan red carpet",
+      "stage": "riset"
+    },
+    "s12": {
+      "gap": "Pesaing hanya menyebut nama produk tanpa denah",
+      "intent": "transaksional",
+      "kw": "sewa partisi R8, sewa booth pameran, sewa stand bazar",
+      "name": "Partisi & Booth",
+      "niche": "Sewa partisi R8 dan booth pameran",
+      "stage": "riset"
+    },
+    "s13": {
+      "gap": "Contoh hasil nyata jarang ditampilkan",
+      "intent": "transaksional",
+      "kw": "sewa photo booth, sewa backdrop, backdrop wisuda",
+      "name": "Photo Booth & Backdrop",
+      "niche": "Sewa photo booth dan backdrop acara",
+      "stage": "riset"
+    },
+    "s14": {
+      "gap": "Kategori kecil dengan sedikit pesaing khusus",
+      "intent": "transaksional",
+      "kw": "sewa podium, sewa mimbar, sewa meja registrasi",
+      "name": "Podium & Mimbar",
+      "niche": "Sewa podium, mimbar, dan perlengkapan seremonial",
+      "stage": "riset"
+    },
+    "s15": {
+      "gap": "Panduan ukuran layar vs ukuran ruangan kurang",
+      "intent": "transaksional",
+      "kw": "sewa proyektor, sewa TV LED event, sewa layar proyektor",
+      "name": "Layar & Proyektor",
+      "niche": "Sewa TV, monitor, proyektor, dan layar",
+      "stage": "riset"
+    },
+    "s16": {
+      "gap": "Kebutuhan lengkap per tipe acara jarang dirangkum",
+      "intent": "informasional+transaksional",
+      "kw": "sewa alat wisuda, sewa sound pensi, perlengkapan acara kampus",
+      "name": "Wisuda & Pensi",
+      "niche": "Perlengkapan wisuda, pentas seni, dan acara kampus",
+      "stage": "riset"
+    },
+    "s17": {
+      "gap": "Daftar kebutuhan per jumlah tamu hampir tidak ada",
+      "intent": "informasional+transaksional",
+      "kw": "sewa alat pesta pernikahan, sewa tenda pernikahan, checklist alat nikah",
+      "name": "Pernikahan & Resepsi",
+      "niche": "Alat pesta pernikahan di rumah atau gedung",
+      "stage": "riset"
+    },
+    "s18": {
+      "gap": "Sedikit pesaing khusus korporat",
+      "intent": "informasional+transaksional",
+      "kw": "sewa alat gathering, perlengkapan family gathering, sewa tenda outbound",
+      "name": "Gathering Kantor",
+      "niche": "Perlengkapan family day dan gathering perusahaan",
+      "stage": "riset"
+    },
+    "s19": {
+      "gap": "Panduan tata letak stand minim",
+      "intent": "informasional+transaksional",
+      "kw": "sewa alat pameran, perlengkapan bazar, sewa tenda bazar",
+      "name": "Pameran & Bazar",
+      "niche": "Perlengkapan pameran, expo, dan bazar",
+      "stage": "riset"
+    },
+    "s20": {
+      "gap": "Konten teknis untuk penyelenggara pemula jarang ada",
+      "intent": "informasional+transaksional",
+      "kw": "sewa alat konser, kebutuhan festival musik, sewa stage konser",
+      "name": "Konser & Festival",
+      "niche": "Perlengkapan konser dan festival skala kecil-menengah",
+      "stage": "riset"
+    },
+    "s21": {
+      "gap": "Paket seminar jarang disusun jelas",
+      "intent": "informasional+transaksional",
+      "kw": "sewa alat seminar, sewa live streaming event, event hybrid",
+      "name": "Seminar & Hybrid",
+      "niche": "Perlengkapan seminar, konferensi, dan acara hybrid",
+      "stage": "riset"
+    },
+    "s22": {
+      "gap": "Musiman, mudah dibuat panduan khusus",
+      "intent": "informasional+transaksional",
+      "kw": "sewa tenda 17 agustus, perlengkapan acara kampung, sewa sound RT",
+      "name": "Acara Kampung & 17 Agustus",
+      "niche": "Perlengkapan acara RT/RW dan peringatan nasional",
+      "stage": "riset"
+    },
+    "s23": {
+      "gap": "Sudut komersial B2B yang sepi",
+      "intent": "informasional+transaksional",
+      "kw": "alat launching produk, brand activation, booth activation",
+      "name": "Peluncuran Produk",
+      "niche": "Perlengkapan launching dan brand activation",
+      "stage": "riset"
+    },
+    "s24": {
+      "gap": "Tidak ada alat interaktif di pesaing yang saya periksa",
+      "intent": "informasional",
+      "kw": "hitung kebutuhan tenda, jumlah kursi per tamu, kalkulator event",
+      "name": "Kalkulator Kebutuhan Tamu",
+      "niche": "Alat hitung kebutuhan tenda, kursi, dan toilet per jumlah tamu",
+      "stage": "riset"
+    },
+    "s25": {
+      "gap": "Pesaing hanya menjual, tidak menjelaskan cara menghitung",
+      "intent": "informasional",
+      "kw": "hitung kebutuhan genset, daya sound system, kapasitas listrik event",
+      "name": "Panduan Daya & Genset",
+      "niche": "Panduan menghitung daya listrik acara",
+      "stage": "riset"
+    },
+    "s26": {
+      "gap": "Cocok untuk tautan alami dan unduhan",
+      "intent": "informasional",
+      "kw": "checklist alat event, daftar kebutuhan acara, template rundown alat",
+      "name": "Checklist Alat Event",
+      "niche": "Template checklist perlengkapan acara",
+      "stage": "riset"
+    },
+    "s27": {
+      "gap": "Konten edukasi hampir kosong di situs rental",
+      "intent": "informasional",
+      "kw": "cara memilih sound system acara, watt sound untuk 100 orang",
+      "name": "Panduan Memilih Sound",
+      "niche": "Cara memilih sound system sesuai ruangan",
+      "stage": "riset"
+    },
+    "s28": {
+      "gap": "Menjawab typo dan istilah tanpa penjelasan di situs pesaing",
+      "intent": "informasional",
+      "kw": "apa itu truss, arti DMX, istilah rigging",
+      "name": "Glosarium Event",
+      "niche": "Kamus istilah teknis event dan produksi",
+      "stage": "riset"
+    },
+    "s29": {
+      "gap": "Topik berisiko tinggi, perlu verifikasi hukum sebelum tayang",
+      "intent": "informasional",
+      "kw": "izin keramaian acara, K3 event, syarat izin acara",
+      "name": "Perizinan & K3 Acara",
+      "niche": "Panduan izin keramaian dan keselamatan acara",
+      "stage": "riset"
+    },
+    "s30": {
+      "gap": "Sudut analisis biaya yang jarang ada",
+      "intent": "informasional",
+      "kw": "sewa atau beli sound system, biaya beli genset, untung rugi alat event",
+      "name": "Sewa vs Beli",
+      "niche": "Perbandingan sewa dan beli peralatan event",
+      "stage": "riset"
+    }
+  },
+  "log": [
+    {
+      "agent": "a02",
+      "text": "30 niche masuk papan di tahap Riset. Belum ada data volume pencarian, prioritas menunggu keputusan",
+      "ts": "2026-10-27T06:32:00.000Z"
+    },
+    {
+      "agent": "a01",
+      "text": "Selesai: Eventara, Match Production, Iconic Rent, Sound Jakarta. Pola umum: harga dan panduan hitung kebutuhan hampir tidak ada",
+      "ts": "2026-10-27T06:31:00.000Z"
+    },
+    {
+      "agent": "a02",
+      "text": "Mulai memilih kandidat niche dan kata kunci",
+      "ts": "2026-10-27T06:20:05.000Z"
+    },
+    {
+      "agent": "a01",
+      "text": "Mulai riset kompetitor sewa alat event",
+      "ts": "2026-10-27T06:20:00.000Z"
+    },
+    {
+      "agent": "coord",
+      "text": "Kantor dibuka. Sepuluh agent siap menerima tugas; belum ada website di papan.",
+      "ts": "2026-10-27T04:00:00.000Z"
+    }
+  ]
+}

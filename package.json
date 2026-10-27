@@ -1,0 +1,11 @@
+{
+  "name": "kantor-virtual-magna",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Kantor virtual 3D untuk memantau 10 agent AI yang mengerjakan 30 website MagnaRent",
+  "scripts": {
+    "dev": "npx serve .",
+    "kv": "node scripts/kv.mjs"
+  }
+}
