@@ -130,7 +130,17 @@
   .log .when { color: var(--muted); font-size: 11px; font-variant-numeric: tabular-nums; }
   .log .txt { overflow-wrap: anywhere; }
   .empty { border: 2px dashed var(--line); padding: 14px; color: var(--muted); background: var(--panel); margin-bottom: 10px; }
-  .board { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 8px; }
+  .board { display: grid; gap: 8px; }
+  .acc { background: var(--panel); border: 2px solid var(--line); min-width: 0; }
+  .acc[open] { border-color: var(--ink); }
+  .acc summary { cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 10px 12px; font-family: var(--font-px); font-size: 12px; text-transform: uppercase; letter-spacing: .06em; }
+  .acc summary::-webkit-details-marker { display: none; }
+  .acc summary::after { content: "\25BE"; margin-left: 8px; color: var(--muted); }
+  .acc[open] summary::after { content: "\25B4"; }
+  .acc summary:focus-visible { outline: 3px solid var(--st-done); outline-offset: -3px; }
+  .acc .cnt { margin-left: auto; font-variant-numeric: tabular-nums; color: var(--muted); }
+  .acc .acc-body { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 8px; padding: 0 10px 10px; }
+  .acc .none { color: var(--muted); font-size: 12px; padding: 0 12px 10px; }
   .col { background: var(--panel); border: 2px solid var(--line); min-width: 0; display: grid; align-content: start; gap: 6px; padding: 8px; }
   .col h3 { margin: 0; font-family: var(--font-px); font-size: 11px; text-transform: uppercase; letter-spacing: .06em; display: flex; justify-content: space-between; color: var(--muted); }
   .col .none { color: var(--muted); font-size: 12px; }
@@ -177,7 +187,7 @@
           <div class="p-site" id="p-site"></div>
         </div>
       </div>
-      <p class="hint" id="hint" hidden>Seret untuk memutar 360°, gulir atau tombol +/− untuk zoom, Shift+seret untuk menggeser, klik karakter untuk melihat tugasnya. Pintu Ruang Intern dan Kamar Staff terbuka saat ada yang lewat, Kamar Owner tertutup. Ada dua kucing, anjing, burung, dan ikan koi. Denah mengikuti MagnaSuperApp dan foto kantor: lorong di tengah, di kiri Kamar Staff dan Ruang Tim Creative, di kanan Ruang Intern dan Kamar Owner, dapur dengan bar kuning di utara, serta Ruang Tamu, teras, dan gerbang di selatan. Jam, langit, dan lampu mengikuti waktu WIB sungguhan. Agent yang bekerja, selesai, atau gagal tetap di kursinya di Ruang Intern dan layar monitornya berubah warna. Yang berjalan ke pantry, lorong, Meja Besar, atau teras adalah agent yang sedang menunggu tugas, dan larut malam mereka pulang lewat gerbang.</p>
+      <p class="hint" id="hint" hidden>Seret untuk memutar 360°, gulir atau tombol +/− untuk zoom, Shift+seret untuk menggeser, klik karakter untuk melihat tugasnya. Pintu Ruang Intern dan Kamar Staff terbuka saat ada yang lewat, Kamar Owner tertutup. Jadwal agent yang menunggu tugas: 08.00 siap-siap, 09.00 sampai 12.00 dan 13.00 sampai 18.00 jam kerja (standby di meja), 12.00 sampai 13.00 istirahat, 18.00 sampai 24.00 bebas (main game, ngobrol, main dart, santai), dan 00.00 sampai 08.00 tidur di Kamar Staff. Agent yang sedang punya tugas tetap di mejanya. Ada dua kucing, anjing, burung, dan ikan koi. Denah mengikuti MagnaSuperApp dan foto kantor: lorong di tengah, di kiri Kamar Staff dan Ruang Tim Creative, di kanan Ruang Intern dan Kamar Owner, dapur dengan bar kuning di utara, serta Ruang Tamu, teras, dan gerbang di selatan. Jam, langit, dan lampu mengikuti waktu WIB sungguhan. Agent yang bekerja, selesai, atau gagal tetap di kursinya di Ruang Intern dan layar monitornya berubah warna. Yang berjalan ke pantry, lorong, Meja Besar, atau teras adalah agent yang sedang menunggu tugas, dan larut malam mereka pulang lewat gerbang.</p>
       <div class="floor" id="floor"></div>
     </section>
     <aside class="side" aria-labelledby="h-log">
@@ -234,13 +244,15 @@
   }
   function p2(n) { return ("0" + n).slice(-2); }
   function wibHour() { var w = wibParts(); return w.h + w.m / 60 + w.s / 3600; }
+  function phaseOf(h) { return h < 8 ? "sleep" : h < 9 ? "prep" : (h >= 12 && h < 13) ? "lunch" : h < 18 ? "work" : "free"; }
+  var PHASE_LABEL = { sleep: "jam tidur", prep: "siap-siap kerja", work: "jam kerja", lunch: "istirahat", free: "waktu bebas" };
   function dayPart() { var h = wibHour(); return h < 5 ? "dini hari" : h < 11 ? "pagi" : h < 15 ? "siang" : h < 18 ? "sore" : "malam"; }
   function wibClock(sec) { var w = wibParts(); return p2(w.h) + ":" + p2(w.m) + (sec ? ":" + p2(w.s) : "") + " WIB"; }
   function wibDate() { var w = wibParts(); return HARI[w.wd] + ", " + w.day + " " + BLN[w.mon] + " " + w.yr; }
   var stampLatest = 0;
   function updateStamp() {
     $("#stamp").textContent = (stampLatest ? "Pembaruan terakhir " + ago(new Date(stampLatest).toISOString()) : "Belum ada pembaruan dari agent");
-    var c = $("#clock-chip"); if (c) c.textContent = wibClock(true) + " · " + wibDate() + " · " + dayPart();
+    var c = $("#clock-chip"); if (c) c.textContent = wibClock(true) + " · " + wibDate() + " · " + PHASE_LABEL[phaseOf(wibHour())];
   }
 
   /* ---------- Tampilan sederhana (2D) ---------- */
@@ -330,27 +342,34 @@
       .catch(function () { btn.disabled = false; btn.textContent = "Gagal, coba lagi"; });
   }
 
+  var openStages = {};
   function renderBoard() {
     $("#empty-sites").hidden = state.sites.length > 0;
     var root = $("#board"); root.replaceChildren();
     STAGES.forEach(function (s) {
       var items = state.sites.filter(function (x) { return x.stage === s[0]; });
-      var col = el("div", "col"), h = el("h3"); h.append(el("span", null, s[1]), el("span", null, String(items.length))); col.append(h);
-      if (!items.length) col.append(el("div", "none", "Kosong"));
-      items.forEach(function (x) {
-        var card = el("div", "card");
-        card.append(el("strong", null, x.name || x.id));
-        if (x.niche) card.append(el("span", "niche", x.niche));
-        if (typeof x.score === "number") card.append(el("span", "score", "Skor " + x.score + " / 100"));
-        if (typeof x.url === "string" && /^https:\/\//.test(x.url)) {
-          var a = el("a", null, "Buka pratinjau"); a.href = x.url; a.target = "_blank"; a.rel = "noopener noreferrer"; card.append(a);
-        }
-        if (s[0] === "pratinjau" && state.canEdit) {
-          var b = el("button", "btn", "Setujui"); b.type = "button"; b.addEventListener("click", function () { approve(x, b); }); card.append(b);
-        }
-        col.append(card);
-      });
-      root.append(col);
+      var det = el("details", "acc"); det.open = !!openStages[s[0]];
+      det.addEventListener("toggle", function () { openStages[s[0]] = det.open; });
+      var sm = el("summary"); sm.append(el("span", null, s[1]), el("span", "cnt", items.length + " website")); det.append(sm);
+      if (!items.length) det.append(el("div", "none", "Kosong"));
+      else {
+        var body = el("div", "acc-body");
+        items.forEach(function (x) {
+          var card = el("div", "card");
+          card.append(el("strong", null, x.name || x.id));
+          if (x.niche) card.append(el("span", "niche", x.niche));
+          if (typeof x.score === "number") card.append(el("span", "score", "Skor " + x.score + " / 100"));
+          if (typeof x.url === "string" && /^https:\/\//.test(x.url)) {
+            var a = el("a", null, "Buka pratinjau"); a.href = x.url; a.target = "_blank"; a.rel = "noopener noreferrer"; card.append(a);
+          }
+          if (s[0] === "pratinjau" && state.canEdit) {
+            var b = el("button", "btn", "Setujui"); b.type = "button"; b.addEventListener("click", function () { approve(x, b); }); card.append(b);
+          }
+          body.append(card);
+        });
+        det.append(body);
+      }
+      root.append(det);
     });
   }
 
@@ -424,14 +443,7 @@
       lampMats.forEach(function (m) { m.opacity = 0.12 + 0.88 * k.night; });
       if (fireLight) fireLight.intensity = 0.5 + 1.6 * k.night;
     }
-    function mood() {
-      var h = hourNow;
-      if (h >= 22 || h < 5) return "sleep";
-      if (h >= 11.5 && h < 13.5) return "lunch";
-      if (h >= 6.5 && h < 9) return "morning";
-      if (h >= 17) return "evening";
-      return "day";
-    }
+    function mood() { return phaseOf(hourNow); }
     var gnd = new T.Mesh(new T.PlaneGeometry(84, 66), groundMat);
     gnd.rotation.x = -Math.PI / 2; gnd.position.set(0, 0, -1); gnd.receiveShadow = true; scene.add(gnd);
 
@@ -483,6 +495,13 @@
     N("TA0", 1.5, 14.8); N("TA1", 2.5, 14.8); N("TA2", 3.5, 14.8); chain(["TT", "TA0", "TA1", "TA2"]);
     N("TC0", 1.5, 15.8, "sit", 0); N("TC1", 2.5, 15.8, "sit", 0); N("TC2", 3.5, 15.8, "sit", 0); E("TA0", "TC0"); E("TA1", "TC1"); E("TA2", "TC2");
     N("ST0", 1.3, 4, "stand", -Math.PI / 2); E("H3", "ST0"); N("ST1", -1.3, -4, "stand", Math.PI / 2); E("H1", "ST1");
+    N("KD", -3, -4); E("ST1", "KD");
+    var BX = [-12.8, -10.8, -8.8, -6.8, -4.8];
+    BX.forEach(function (bx, k) {
+      N("KA" + k, bx, -4.05); N("BD" + k, bx, -5.5, "lie", 0); N("BD" + (k + 5), bx, -2.6, "lie", Math.PI);
+      E("KA" + k, "BD" + k); E("KA" + k, "BD" + (k + 5));
+    });
+    E("KD", "KA4"); E("KA4", "KA3"); E("KA3", "KA2"); E("KA2", "KA1"); E("KA1", "KA0");
     N("PH0", -1.5, 14.9, "stand", 0); N("PH1", -2.6, 14.9, "stand", 0); E("TT", "PH0"); E("PH0", "PH1");
     N("GP", 0, 19); N("GZ", 0, 21); N("OUT", 0, 23.5); E("TT", "GP"); E("GP", "GZ"); E("GZ", "OUT");
 
@@ -856,15 +875,17 @@
       if (st === "working") return typeof d.task === "string" && d.task ? d.task : "Bekerja";
       if (st === "done") return "Selesai";
       if (st === "error") return "Perlu dicek!";
-      if (ag.act === "coffee") return md === "lunch" ? "Makan siang" : md === "morning" ? "Ngopi pagi" : "Ngopi dulu";
+      if (ag.act === "coffee") return md === "lunch" ? "Makan siang" : md === "prep" ? "Ngopi pagi" : "Ngopi dulu";
       if (ag.act === "fire") return "Main dart";
       if (ag.act === "phone") return "Scroll HP";
       if (ag.act === "stretch") return "Peregangan";
+      if (ag.act === "sleep") return md === "sleep" ? "Tidur zZz" : "Bangun tidur";
+      if (ag.act === "game") return "Main game";
       if (ag.act === "leave") return "Pulang";
       if (ag.act === "chat") return "Ngobrol";
-      if (ag.act === "meet") return "Rapat";
-      if (ag.act === "sofa") return md === "evening" ? "Santai" : "Rehat";
-      return md === "sleep" ? "Tidur zZz" : (ag.sit > 0.5 ? "Santai di meja" : "Menunggu tugas");
+      if (ag.act === "meet") return md === "free" ? "Nongkrong" : md === "lunch" ? "Makan bareng" : "Rapat";
+      if (ag.act === "sofa") return md === "free" ? "Santai" : "Rehat";
+      return md === "prep" ? "Siap-siap kerja" : md === "free" ? "Santai di meja" : (ag.sit > 0.5 ? "Standby di meja" : "Menunggu tugas");
     }
     function fitText(x, t, maxW) {
       if (x.measureText(t).width <= maxW) return t;
@@ -903,7 +924,7 @@
 
     var agents = [], pickables = [], owner = {}, SHARED = {};
     var SPOTS = { coffee: ["PS0", "PS1"], chat: ["CH0", "CH1"], meet: ["MN0", "MN1", "MN2", "MS0", "MS1", "MS2"], sofa: ["TC0", "TC1", "TC2"], fire: ["DT0", "DT1"], phone: ["PH0", "PH1"], stretch: ["ST0", "ST1"] };
-    var DUR = { coffee: [7, 11], chat: [9, 14], meet: [14, 24], sofa: [9, 15], fire: [10, 16], phone: [8, 14], stretch: [5, 8], home: [5, 10] };
+    var DUR = { coffee: [7, 11], chat: [9, 14], meet: [14, 24], sofa: [9, 15], fire: [10, 16], phone: [8, 14], stretch: [5, 8], game: [25, 50], home: [5, 10] };
     Object.keys(SPOTS).forEach(function (t) { SPOTS[t].forEach(function (k) { SHARED[k] = 1; }); });
 
     AGENTS.forEach(function (a, n) {
@@ -925,7 +946,7 @@
       var d = deskObj[ag.i], st = ag.status;
       d.led.material.color.set(LED[st]); d.plate.material.color.set(LED[st]); d.mode = "";
     }
-    var GLOW = { working: [0x1fbf86, 0.24], browse: [0x5aa0ff, 0.13], done: [0x3b82e6, 0.2], error: [0xe04a4a, 0.24], off: [0x000000, 0] };
+    var GLOW = { game: [0xb06aff, 0.2], working: [0x1fbf86, 0.24], browse: [0x5aa0ff, 0.13], done: [0x3b82e6, 0.2], error: [0xe04a4a, 0.24], off: [0x000000, 0] };
     function drawScr(d, mode, t) {
       var c = d.ctx, w = 192, h = 104, i;
       if (mode === "off") { c.fillStyle = "#0a0e13"; c.fillRect(0, 0, w, h); }
@@ -934,6 +955,11 @@
         var sc = t * 16, li = Math.floor(sc / 11), cols = ["#1fbf86", "#8ff0cb", "#e8c547"];
         for (i = 0; i < 10; i++) { var L = li + i, y = 14 + i * 11 - (sc % 11); c.fillStyle = cols[L % 3]; c.fillRect(8 + (L * 7 % 4) * 12, y, 26 + (L * 37 % 90), 5); }
         if (Math.floor(t * 2) % 2) { c.fillStyle = "#ffffff"; c.fillRect(150, h - 14, 6, 9); }
+      } else if (mode === "game") {
+        c.fillStyle = "#1a1033"; c.fillRect(0, 0, w, h); c.fillStyle = "#33205e"; c.fillRect(0, 84, w, 20);
+        var jy = Math.abs(Math.sin(t * 3)) * 34; c.fillStyle = "#ffd23f"; c.fillRect(30, 70 - jy, 14, 14);
+        for (i = 0; i < 3; i++) { var ox = ((w + 40) - ((t * 70 + i * 90) % (w + 40))); c.fillStyle = i % 2 ? "#ff5a7a" : "#4de1c1"; c.fillRect(ox, 70, 12, 14); }
+        c.fillStyle = "#ffffff"; c.font = "bold 12px monospace"; c.fillText("SCORE " + Math.floor(t * 9), 8, 14);
       } else if (mode === "browse") {
         c.fillStyle = "#1b2736"; c.fillRect(0, 0, w, h); c.fillStyle = "#2a3b52"; c.fillRect(0, 0, w, 12);
         var o = (t * 5) % 44;
@@ -947,8 +973,8 @@
     }
     function updateScreens() {
       agents.forEach(function (ag) {
-        var d = deskObj[ag.i], mode = ag.status !== "idle" ? ag.status : (ag.sit > 0.6 && ag.node === "S" + ag.i ? "browse" : "off");
-        if (mode !== d.mode || ((mode === "working" || mode === "browse") && T_ - d.last > 0.14)) { d.mode = mode; d.last = T_; drawScr(d, mode, T_); }
+        var d = deskObj[ag.i], mode = ag.status !== "idle" ? ag.status : (ag.sit > 0.6 && ag.node === "S" + ag.i ? (ag.act === "game" ? "game" : "browse") : "off");
+        if (mode !== d.mode || ((mode === "working" || mode === "browse" || mode === "game") && T_ - d.last > 0.14)) { d.mode = mode; d.last = T_; drawScr(d, mode, T_); }
       });
     }
     agents.forEach(applyDesk);
@@ -992,22 +1018,27 @@
     }
     function nextActivity(ag) {
       var meetBusy = SPOTS.meet.some(function (k) { return owner[k] !== undefined; }), md = mood(), W;
-      if (md === "lunch") W = [["home", 0.15], ["coffee", 0.38], ["chat", 0.26], ["meet", 0.06], ["sofa", 0.12], ["phone", 0.1]];
-      else if (md === "morning") W = [["home", 0.2], ["coffee", 0.32], ["chat", 0.2], ["meet", meetBusy ? 0.3 : 0.18], ["sofa", 0.08], ["stretch", 0.14], ["phone", 0.06]];
-      else if (md === "evening") W = [["home", 0.2], ["coffee", 0.1], ["chat", 0.18], ["meet", 0.07], ["sofa", 0.2], ["fire", 0.2], ["phone", 0.12]];
-      else W = [["home", 0.22], ["coffee", 0.2], ["chat", 0.2], ["meet", meetBusy ? 0.34 : 0.16], ["sofa", 0.12], ["phone", 0.1], ["stretch", 0.08]];
+      if (md === "lunch") W = [["home", 0.1], ["coffee", 0.38], ["chat", 0.2], ["meet", 0.1], ["sofa", 0.12], ["phone", 0.1]];
+      else if (md === "prep") W = [["home", 0.3], ["coffee", 0.3], ["chat", 0.18], ["stretch", 0.16], ["phone", 0.06]];
+      else if (md === "free") W = [["home", 0.04], ["game", 0.28], ["fire", 0.12], ["chat", 0.14], ["meet", meetBusy ? 0.2 : 0.14], ["sofa", 0.1], ["phone", 0.08], ["coffee", 0.06], ["stretch", 0.04]];
+      else W = [["home", 0.72], ["coffee", 0.08], ["stretch", 0.07], ["phone", 0.03], ["chat", 0.05], ["meet", 0.05]];
       var sum = 0, q; W.forEach(function (w) { sum += w[1]; });
       var rr = Math.random() * sum, type = "home";
       for (q = 0; q < W.length; q++) { rr -= W[q][1]; if (rr <= 0) { type = W[q][0]; break; } }
+      if (type === "fire" && Math.random() < 0.7 && startGroup(ag, type)) return;
       if (type === "chat" || type === "meet") { if (startGroup(ag, type)) return; type = Math.random() < 0.5 ? "coffee" : "phone"; }
-      var spot = type === "home" ? null : pickSpot(type, ag);
+      var spot = (type === "home" || type === "game") ? null : pickSpot(type, ag);
       var dur = rnd(DUR[type][0], DUR[type][1]);
-      if (!spot) { sendTo(ag, "S" + ag.i, "home", rnd(DUR.home[0], DUR.home[1])); } else { sendTo(ag, spot, type, dur); }
+      if (!spot) { sendTo(ag, "S" + ag.i, type === "game" ? "game" : "home", type === "game" ? rnd(DUR.game[0], DUR.game[1]) : rnd(DUR.home[0], DUR.home[1]) * (md === "work" ? 7 : 1)); } else { sendTo(ag, spot, type, dur); }
     }
 
     var T_ = 0;
     function step(ag, dt) {
       var st = ag.status, sleepy = mood() === "sleep";
+      if (!ag.inited) {
+        ag.inited = true;
+        if (sleepy && st === "idle" && !NO_WANDER) { var bd = nodes["BD" + ag.i]; ag.node = "BD" + ag.i; ag.x = bd.x; ag.z = bd.z; ag.mode = "stay"; ag.act = "sleep"; ag.dest = ag.node; ag.yaw = ag.yawT = bd.yaw; ag.lie = 1; ag.sit = 0; ag.timer = 1e9; }
+      }
       ag.talk = talking(ag);
       if (ag.grp && ag.mode === "stay" && (ag.act === "chat" || ag.act === "meet")) {
         var others = 0; agents.forEach(function (o) { if (o !== ag && o.grp === ag.grp && o.act === ag.act) others++; });
@@ -1029,11 +1060,11 @@
           } else { ag.x += dx / d * s; ag.z += dz / d * s; }
         }
       } else if (st === "idle" && ag.act !== "work" && !NO_WANDER) {
-        if (sleepy) { if (ag.dest !== "OUT") sendTo(ag, "OUT", "leave", 1e9); }
-        else if (ag.act === "leave") { ag.act = "home"; ag.timer = rnd(2, 8); }
+        if (sleepy) { if (ag.act !== "sleep") { if (ag.bedT == null) ag.bedT = rnd(0, 60); ag.bedT -= dt; if (ag.bedT <= 0) { ag.bedT = null; sendTo(ag, "BD" + ag.i, "sleep", 1e9); } } }
+        else if (ag.act === "sleep" || ag.act === "leave") { if (ag.wakeT == null) ag.wakeT = rnd(0, 60); ag.wakeT -= dt; if (ag.wakeT <= 0) { ag.wakeT = null; ag.act = "home"; ag.timer = rnd(1, 4); } }
         else { ag.timer -= dt; if (ag.timer <= 0) nextActivity(ag); }
       }
-      if (st === "idle" && sleepy && ag.mode === "walk" && ag.dest !== "OUT" && !NO_WANDER) sendTo(ag, "OUT", "leave", 1e9);
+      if (st === "idle" && sleepy && ag.mode === "walk" && ag.dest !== "BD" + ag.i && ag.act !== "sleep" && !NO_WANDER) sendTo(ag, "BD" + ag.i, "sleep", 1e9);
       var rg = ag.ring; rg.visible = st !== "idle";
       if (rg.visible) {
         rg.material.color.set(LED[st]);
@@ -1061,6 +1092,8 @@
       if (sit > 0.5) { aL = -0.55; aR = -0.55; }
       if (sit > 0.5 && ag.act === "work" && ag.status === "working") { aL = -1.2 + Math.sin(t * 16 + ag.ph) * 0.1; aR = -1.2 + Math.sin(t * 16 + ag.ph + 2) * 0.1; }
       if (sit > 0.5 && ag.act === "home" && ag.status === "idle") { aL = -1.15 + Math.sin(t * 2.1 + ag.ph) * 0.05; aR = -1.15 + Math.sin(t * 2.7 + ag.ph + 1) * 0.07; }
+      if (sit > 0.5 && ag.act === "game" && ag.status === "idle") { aL = -1.2 + Math.sin(t * 17 + ag.ph) * 0.14; aR = -1.2 + Math.sin(t * 13 + ag.ph + 2) * 0.14; }
+      if (stay && ag.act === "fire") { aR = -1.7 + Math.sin(t * 2.4 + ag.ph) * 0.6; }
       if (ag.talk && ag.act === "chat") aR = -1.1 + Math.sin(t * 3.5 + ag.ph) * 0.5;
       if (stay && ag.act === "coffee") aR = -2.0;
       if (stay && ag.act === "phone") { aR = -1.35 + Math.sin(t * 1.3 + ag.ph) * 0.06; aL = -0.2; }
@@ -1071,7 +1104,7 @@
       if (lie > 0.5) { aL = -0.05; aR = -0.05; p.armL.rotation.x = aL; p.armR.rotation.x = aR; }
       p.root.position.set(ag.x, -0.4 * sit + 0.75 * lie + (walk ? Math.abs(Math.sin(ag.phase)) * 0.05 : 0), ag.z);
       var diff = ((ag.yawT - ag.yaw + Math.PI * 3) % (Math.PI * 2)) - Math.PI; ag.yaw += diff * Math.min(1, dt * 9); p.root.rotation.y = ag.yaw;
-      p.head.rotation.x = (ag.act === "home" && sit > 0.5 && ag.status === "idle") ? 0.2 : (stay && ag.act === "phone") ? 0.5 : (ag.status === "working" ? 0.12 : 0);
+      p.head.rotation.x = ((ag.act === "home" || ag.act === "game") && sit > 0.5 && ag.status === "idle") ? 0.2 : (stay && ag.act === "phone") ? 0.5 : (ag.status === "working" ? 0.12 : 0);
       p.head.rotation.y = ag.status === "error" && stay ? Math.sin(t * 7) * 0.35 : 0;
       ag.blinkT -= dt; if (ag.blinkT < -0.12) ag.blinkT = rnd(2.5, 5);
       var closed = ag.blinkT < 0 || lie > 0.5;
